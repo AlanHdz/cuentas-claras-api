@@ -19,6 +19,8 @@ API para dividir gastos entre amigos: grupos, quién pagó qué, quién le debe 
 
 ```bash
 npm ci
+cp .env.example .env   # luego edita los valores
+docker compose up -d
 ```
 
 ## Comandos
@@ -35,4 +37,13 @@ npm ci
 
 ## Variables de entorno
 
-El archivo `.env` nunca se sube al repo. Las variables se documentarán aquí a partir de F0-2.
+Copia `.env.example` a `.env` y ajusta los valores. El archivo `.env` nunca se sube al repo.
+
+| Variable            | Descripción                          |
+| ------------------- | ------------------------------------ |
+| `POSTGRES_USER`     | Usuario de PostgreSQL                |
+| `POSTGRES_PASSWORD` | Contraseña de PostgreSQL             |
+| `POSTGRES_DB`       | Nombre de la base de datos           |
+| `NODE_ENV`          | `development`, `test` o `production` |
+| `PORT`              | Puerto de la API (default 3000)      |
+| `DATABASE_URL`      | URL de conexión que usa la API       |
