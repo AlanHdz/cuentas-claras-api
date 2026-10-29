@@ -10,6 +10,7 @@ Este archivo trae todo el contexto de la conversación donde se planeó el proye
 - Prefiere ejemplos concretos antes que explicaciones abstractas, y que le corrijan el alcance temprano.
 
 ### El problema que este proyecto debe resolver
+
 Alan empezó varios proyectos ambiciosos (un SaaS dental en NestJS y en Spring Boot, una plataforma de venta de boletos con NestJS/Vue/Redis/BullMQ/Stripe, un plan de estudios de 36 semanas) y **no terminó ninguno**. Los dejó y ya no trabaja en ellos. El patrón: mucha planeación y cambios de herramienta, poco código en producción, nada con usuarios reales.
 
 Por eso este proyecto tiene reglas anti-abandono (abajo) y Claude debe hacerlas cumplir con amabilidad pero sin ceder. Si Alan propone cambiar de stack, de herramienta o empezar otro proyecto antes de la v1.0, Claude se lo recuerda y lo platican antes de mover nada.
@@ -22,21 +23,22 @@ Un "Splitwise mexicano": grupos (roomies, viajes, cenas), registrar quién pagó
 
 ### Stack (decidido, no se cambia hasta v1.0)
 
-| Pieza | Herramienta | Por qué |
-| --- | --- | --- |
-| API | NestJS + TypeScript estricto | Ya lo domina; la energía va a conceptos nuevos |
-| Base de datos | PostgreSQL + Prisma | Transacciones y restricciones para que el dinero cuadre |
-| Colas y caché | Redis + BullMQ (desde Fase 3) | Tipo de cambio diario, correos, recordatorios |
-| Web | Vue 3 + Vite, mínima | Solo para que los amigos lo usen |
-| iOS | SwiftUI (Fase 5) | Consume la misma API |
-| Infra | VPS (2 vCPU, 4 GB) + Docker Compose + Caddy | HTTPS automático; aprende servidores sin Kubernetes |
-| CI/CD | GitHub Actions | Lint, tests y deploy en cada merge a main |
-| Tareas | Linear | Una issue por tarea; no se vuelve a migrar de herramienta |
-| Monitoreo | pino + Sentry + uptime externo | |
+| Pieza         | Herramienta                                 | Por qué                                                   |
+| ------------- | ------------------------------------------- | --------------------------------------------------------- |
+| API           | NestJS + TypeScript estricto                | Ya lo domina; la energía va a conceptos nuevos            |
+| Base de datos | PostgreSQL + Prisma                         | Transacciones y restricciones para que el dinero cuadre   |
+| Colas y caché | Redis + BullMQ (desde Fase 3)               | Tipo de cambio diario, correos, recordatorios             |
+| Web           | Vue 3 + Vite, mínima                        | Solo para que los amigos lo usen                          |
+| iOS           | SwiftUI (Fase 5)                            | Consume la misma API                                      |
+| Infra         | VPS (2 vCPU, 4 GB) + Docker Compose + Caddy | HTTPS automático; aprende servidores sin Kubernetes       |
+| CI/CD         | GitHub Actions                              | Lint, tests y deploy en cada merge a main                 |
+| Tareas        | Linear                                      | Una issue por tarea; no se vuelve a migrar de herramienta |
+| Monitoreo     | pino + Sentry + uptime externo              |                                                           |
 
 Repo de la API: `cuentas-claras-api`.
 
 ### Datos verificados que se usan en el plan
+
 - Banxico SIE: token gratuito en https://www.banxico.org.mx/SieAPIRest/service/v1/token. Serie del dólar FIX: `SF43718`. Límite por token: 80 consultas por minuto y 40,000 al día.
 - Precios de VPS subieron en 2026 (Hetzner +30–37% en abril). Comparar Hetzner, DigitalOcean y Contabo antes de contratar.
 - Apple Developer Program: 99 USD al año, necesario hasta la Fase 5 (TestFlight y push).
@@ -70,7 +72,9 @@ Si una semana Alan no avanza, se ajusta el plan, no se abandona.
 ## Ruta: 6 fases, ~20 semanas a 8–10 h/semana (inicio 2026-10-29)
 
 ### Fase 0 — Setup y deploy (sem 1–2, meta 2026-11-11)
+
 Termina cuando `https://<dominio>/health` responde desde el VPS y cada merge a main se despliega solo.
+
 - ALA-155 F0-1 Repo, proyecto NestJS, ESLint + Prettier y README — **EN PROGRESO**
 - ALA-156 F0-2 Docker Compose local: API + PostgreSQL con variables validadas
 - ALA-157 F0-3 Endpoint GET /health que verifica la base de datos
@@ -81,7 +85,9 @@ Termina cuando `https://<dominio>/health` responde desde el VPS y cada merge a m
 - ALA-162 F0-8 ADR-001: por qué VPS + Docker Compose y no PaaS ni Kubernetes
 
 ### Fase 1 — Usuarios, auth y grupos (sem 3–5, meta 2026-12-02)
+
 Termina cuando puede registrarse en producción, crear un grupo e invitar con un link que caduca.
+
 - ALA-163 F1-1 Design doc: modelo de usuarios, grupos y membresías
 - ALA-164 F1-2 Registro y login: argon2, access token corto y refresh token rotativo
 - ALA-165 F1-3 Guard de autorización: solo miembros ven y editan su grupo (no miembro → 404)
@@ -92,7 +98,9 @@ Termina cuando puede registrarse en producción, crear un grupo e invitar con un
 - ALA-170 F1-8 Web mínima: registro, login, grupos y aceptar invitación
 
 ### Fase 2 — Gastos y balances, el MVP (sem 6–9, meta 2026-12-30) — HITO: usuarios reales
+
 Termina cuando 3 amigos usan la app para un gasto real y los balances cuadran al centavo.
+
 - ALA-171 F2-1 Design doc: gasto, partes y liquidación
 - ALA-172 F2-2 Dinero en centavos enteros y regla del centavo sobrante (`split(10000, 3)` → `[3334, 3333, 3333]`)
 - ALA-173 F2-3 Crear gasto con división igual, por montos o por porcentajes (en transacción)
@@ -107,7 +115,9 @@ Termina cuando 3 amigos usan la app para un gasto real y los balances cuadran al
 - ALA-182 F2-12 Primeros usuarios reales y su feedback
 
 ### Fase 3 — Multimoneda y jobs (sem 10–12, meta 2027-01-20)
+
 Termina cuando un gasto en dólares se convierte con el FIX del día y los recordatorios semanales llegan solos.
+
 - ALA-183 F3-1 Design doc: Banxico caído y tipo de cambio de gastos pasados
 - ALA-184 F3-2 Redis + BullMQ, worker en proceso separado
 - ALA-185 F3-3 Job diario del tipo de cambio con reintentos y respaldo
@@ -117,7 +127,9 @@ Termina cuando un gasto en dólares se convierte con el FIX del día y los recor
 - ALA-189 F3-7 Bull Board protegido
 
 ### Fase 4 — Operación y rendimiento (sem 13–14, meta 2027-02-03)
+
 Termina cuando restauró un backup real en un servidor limpio y una alerta avisó de un error antes que un usuario.
+
 - ALA-190 F4-1 Logs estructurados con request id
 - ALA-191 F4-2 Sentry en API y web con alertas
 - ALA-192 F4-3 Uptime check externo sobre /health
@@ -127,7 +139,9 @@ Termina cuando restauró un backup real en un servidor limpio y una alerta avis�
 - ALA-196 F4-7 Postmortem de un incidente
 
 ### Fase 5 — App iOS, v1.0 (sem 15–20, meta 2027-03-17)
+
 Termina cuando amigos con iPhone instalan por TestFlight, registran un gasto y el grupo recibe una push.
+
 - ALA-197 F5-1 Contrato OpenAPI y /v1 congelada
 - ALA-198 F5-2 SwiftUI: login con Keychain y refresh automático
 - ALA-199 F5-3 Pantallas: grupos, gastos, agregar gasto, balances
@@ -141,6 +155,7 @@ Termina cuando amigos con iPhone instalan por TestFlight, registran un gasto y e
 **Tarea:** F0-1 (ALA-155), en progreso. Se entregó la **parte 1** (bloques 1 y 2). Alan todavía **no ha contestado** las 6 preguntas.
 
 ### Bloque 1 · Crear el proyecto (entregado)
+
 ```bash
 node -v                 # Node 22 o superior
 npm i -g @nestjs/cli
@@ -149,24 +164,30 @@ cd cuentas-claras-api
 npm run start:dev
 curl http://localhost:3000    # "Hello World!"
 ```
+
 Se explicó: qué genera `nest new`, por qué fijar npm (`package-lock.json` y `npm ci` en F0-4), modo watch.
 
 Preguntas pendientes:
+
 1. ¿Para qué sirve `package-lock.json` y por qué se sube al repo?
 2. ¿Qué hace `NestFactory.create(AppModule)` en `src/main.ts`?
 3. ¿Qué papel tienen `AppModule`, `AppController` y `AppService`? ¿Por qué la lógica va en el service?
 
 ### Bloque 2 · TypeScript estricto (entregado)
+
 En `tsconfig.json`, quitar `strictNullChecks`/`noImplicitAny` sueltas y dejar:
+
 ```jsonc
 "strict": true,
 "noUncheckedIndexedAccess": true,
 "noImplicitOverride": true,
 "noFallthroughCasesInSwitch": true
 ```
+
 Verificar con `npx tsc --noEmit` y `npm run build`. Se explicó cada bandera; `noUncheckedIndexedAccess` es clave porque en la Fase 2 se divide dinero en arreglos (evita sumar `undefined` y obtener `NaN`).
 
 Preguntas pendientes:
+
 1. Con `strictNullChecks`, ¿qué error marca esto y cómo se arregla sin usar `!`?
    ```ts
    const user = await prisma.user.findUnique({ where: { id } });
@@ -176,6 +197,7 @@ Preguntas pendientes:
 3. ¿Qué diferencia hay entre `npx tsc --noEmit` y `npm run build`?
 
 ### Siguiente paso
+
 1. Revisar las respuestas de Alan a las 6 preguntas (corregir con explicación lo que falle).
 2. **Parte 2 de F0-1:** ESLint (reglas útiles, `lint` sin errores), Prettier, `.gitignore` con `.env` desde el primer commit, README (requisitos, instalación, comandos), repo en GitHub, rama `feat/F0-1-repo-setup`, primer PR. Con preguntas después de cada bloque.
 3. Preguntas de cierre de ALA-155:
