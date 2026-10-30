@@ -19,6 +19,7 @@ API para dividir gastos entre amigos: grupos, quién pagó qué, quién le debe 
 
 ```bash
 npm ci
+npx prisma generate    # genera el cliente de Prisma en src/generated
 cp .env.example .env   # luego edita los valores
 docker compose up -d
 ```
@@ -47,3 +48,7 @@ Copia `.env.example` a `.env` y ajusta los valores. El archivo `.env` nunca se s
 | `NODE_ENV`          | `development`, `test` o `production` |
 | `PORT`              | Puerto de la API (default 3000)      |
 | `DATABASE_URL`      | URL de conexión que usa la API       |
+
+## Health check
+
+`GET /health` responde `200` con `{ "status": "ok", "database": "up" }` si la API y PostgreSQL funcionan, y `503` con `"database": "down"` si la base no responde.
