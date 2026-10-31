@@ -52,3 +52,11 @@ Copia `.env.example` a `.env` y ajusta los valores. El archivo `.env` nunca se s
 ## Health check
 
 `GET /health` responde `200` con `{ "status": "ok", "database": "up" }` si la API y PostgreSQL funcionan, y `503` con `"database": "down"` si la base no responde.
+
+## Producción
+
+`compose.prod.yaml` levanta PostgreSQL, la API y Caddy. Solo Caddy publica puertos (80 y 443) y obtiene el certificado HTTPS automáticamente para `API_DOMAIN`.
+
+```bash
+docker compose -f compose.prod.yaml up -d --build
+```
