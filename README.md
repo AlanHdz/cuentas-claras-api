@@ -40,14 +40,15 @@ docker compose up -d
 
 Copia `.env.example` a `.env` y ajusta los valores. El archivo `.env` nunca se sube al repo.
 
-| Variable            | Descripción                          |
-| ------------------- | ------------------------------------ |
-| `POSTGRES_USER`     | Usuario de PostgreSQL                |
-| `POSTGRES_PASSWORD` | Contraseña de PostgreSQL             |
-| `POSTGRES_DB`       | Nombre de la base de datos           |
-| `NODE_ENV`          | `development`, `test` o `production` |
-| `PORT`              | Puerto de la API (default 3000)      |
-| `DATABASE_URL`      | URL de conexión que usa la API       |
+| Variable            | Descripción                             |
+| ------------------- | --------------------------------------- |
+| `POSTGRES_USER`     | Usuario de PostgreSQL                   |
+| `POSTGRES_PASSWORD` | Contraseña de PostgreSQL                |
+| `POSTGRES_DB`       | Nombre de la base de datos              |
+| `NODE_ENV`          | `development`, `test` o `production`    |
+| `PORT`              | Puerto de la API (default 3000)         |
+| `DATABASE_URL`      | URL de conexión que usa la API          |
+| `API_DOMAIN`        | Dominio de la API en producción (Caddy) |
 
 ## Health check
 
